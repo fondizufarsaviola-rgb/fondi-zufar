@@ -1,0 +1,1143 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BadmintonEdu - Media Pembelajaran Olahraga Bulutangkis</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Font Awesome untuk Ikon -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Fonts: Inter & Plus Jakarta Sans -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@700;800&display=swap" rel="stylesheet">
+    
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                        display: ['Plus Jakarta Sans', 'sans-serif'],
+                    },
+                    colors: {
+                        court: {
+                            50: '#f0fdf4',
+                            100: '#dcfce7',
+                            500: '#22c55e',
+                            600: '#16a34a',
+                            700: '#15803d',
+                            800: '#166534',
+                            900: '#14532d',
+                        },
+                        shuttle: {
+                            300: '#fde047',
+                            400: '#facc15',
+                            500: '#eab308',
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        /* Kustomisasi Scrollbar dan Transisi Halus */
+        ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #f1f5f9;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #cbd5e1;
+            border-radius: 9999px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #94a3b8;
+        }
+        .tab-content {
+            animation: fadeIn 0.35s ease-out forwards;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(8px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .court-zone {
+            transition: all 0.25s ease;
+            cursor: pointer;
+        }
+        .court-zone:hover {
+            fill-opacity: 0.45 !important;
+        }
+    </style>
+</head>
+<body class="bg-slate-50 text-slate-800 font-sans antialiased selection:bg-court-600 selection:text-white">
+
+    <!-- Header / Navbar Utama -->
+    <header class="bg-court-800 text-white sticky top-0 z-40 shadow-lg border-b-4 border-shuttle-400">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex items-center justify-between h-16 sm:h-20">
+                <!-- Logo & Judul -->
+                <div class="flex items-center gap-3">
+                    <div class="w-10 h-10 sm:w-12 sm:h-12 bg-shuttle-400 text-court-900 rounded-2xl flex items-center justify-center shadow-md transform -rotate-6">
+                        <!-- Ikon Shuttlecock SVG -->
+                        <svg class="w-7 h-7" viewBox="0 0 24 24" fill="currentColor">
+                            <path d="M19.5 3.5L15 8l-3.5-3.5L9 7l3.5 3.5L8 15l-4.5 4.5a2.12 2.12 0 003 3L11 18l4.5-4.5L19 17l2.5-2.5L18 11l4.5-4.5-3-3z"/>
+                        </svg>
+                    </div>
+                    <div>
+                        <h1 class="font-display font-extrabold text-lg sm:text-2xl tracking-tight flex items-center gap-2">
+                            Badminton<span class="text-shuttle-400">Edu</span>
+                        </h1>
+                        <p class="text-xs text-court-100 hidden sm:block">Modul Pembelajaran Interaktif PJOK - Bulutangkis</p>
+                    </div>
+                </div>
+
+                <!-- Indikator Progres Belajar -->
+                <div class="flex items-center gap-4">
+                    <div class="hidden md:flex flex-col items-end">
+                        <span class="text-xs font-medium text-court-100">Progres Membaca Materi</span>
+                        <div class="w-40 h-2.5 bg-court-900 rounded-full overflow-hidden mt-1 border border-court-700">
+                            <div id="progress-bar" class="h-full bg-shuttle-400 transition-all duration-500" style="width: 20%;"></div>
+                        </div>
+                    </div>
+                    <button onclick="switchTab('kuis')" class="bg-shuttle-400 hover:bg-shuttle-300 text-court-900 font-bold text-xs sm:text-sm px-4 py-2.5 rounded-xl shadow transition transform active:scale-95 flex items-center gap-2">
+                        <i class="fa-solid fa-trophy"></i>
+                        <span>Mulai Kuis</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Layout Kontainer Utama -->
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8">
+        <div class="flex flex-col lg:flex-row gap-6 lg:gap-8">
+            
+            <!-- Navigasi Sidebar (Desktop) & Horizontal Scroll Tabs (Mobile) -->
+            <aside class="w-full lg:w-72 flex-shrink-0">
+                <div class="bg-white rounded-2xl shadow-sm border border-slate-200 p-2 sm:p-3 sticky top-24">
+                    <p class="hidden lg:block text-xs font-bold uppercase tracking-wider text-slate-400 px-3 pt-2 pb-3">Daftar Bab Pembelajaran</p>
+                    <nav id="nav-tabs" class="flex lg:flex-col gap-2 overflow-x-auto pb-1 lg:pb-0 no-scrollbar" aria-label="Navigasi Materi">
+                        
+                        <button data-tab="sejarah" onclick="switchTab('sejarah')" class="nav-btn active flex items-center gap-3 px-4 py-3 rounded-xl text-left font-semibold text-sm transition-all whitespace-nowrap bg-court-700 text-white shadow-sm">
+                            <span class="w-7 h-7 rounded-lg bg-white/20 flex items-center justify-center text-xs font-bold">1</span>
+                            <span>Sejarah & Pengertian</span>
+                        </button>
+
+                        <button data-tab="lapangan" onclick="switchTab('lapangan')" class="nav-btn flex items-center gap-3 px-4 py-3 rounded-xl text-left font-semibold text-sm text-slate-600 hover:bg-court-50 hover:text-court-800 transition-all whitespace-nowrap">
+                            <span class="w-7 h-7 rounded-lg bg-slate-100 text-slate-600 flex items-center justify-center text-xs font-bold">2</span>
+                            <span>Perlengkapan & Lapangan</span>
+                        </button>
+
+                        <button data-tab="teknik" onclick="switchTab('teknik')" class="nav-btn flex items-center gap-3 px-4 py-3 rounded-xl text-left font-semibold text-sm text-slate-600 hover:bg-court-50 hover:text-court-800 transition-all whitespace-nowrap">
+                            <span class="w-7 h-7 rounded-lg bg-slate-100 text-slate-600 flex items-center justify-center text-xs font-bold">3</span>
+                            <span>Teknik Dasar Permainan</span>
+                        </button>
+
+                        <button data-tab="peraturan" onclick="switchTab('peraturan')" class="nav-btn flex items-center gap-3 px-4 py-3 rounded-xl text-left font-semibold text-sm text-slate-600 hover:bg-court-50 hover:text-court-800 transition-all whitespace-nowrap">
+                            <span class="w-7 h-7 rounded-lg bg-slate-100 text-slate-600 flex items-center justify-center text-xs font-bold">4</span>
+                            <span>Peraturan & Sistem Skor</span>
+                        </button>
+
+                        <button data-tab="kuis" onclick="switchTab('kuis')" class="nav-btn flex items-center gap-3 px-4 py-3 rounded-xl text-left font-semibold text-sm text-slate-600 hover:bg-shuttle-300/30 hover:text-court-900 transition-all whitespace-nowrap border border-dashed border-shuttle-500/50">
+                            <span class="w-7 h-7 rounded-lg bg-shuttle-400 text-court-900 flex items-center justify-center text-xs font-bold"><i class="fa-solid fa-star"></i></span>
+                            <span>Kuis Evaluasi (10 Soal)</span>
+                        </button>
+                    </nav>
+
+                    <!-- Info Singkat BWF -->
+                    <div class="hidden lg:block mt-6 p-4 bg-court-50 rounded-xl border border-court-100">
+                        <div class="flex items-center gap-2 text-court-800 font-bold text-xs mb-1">
+                            <i class="fa-solid fa-circle-info text-court-600"></i>
+                            <span>Tahukah Kamu?</span>
+                        </div>
+                        <p class="text-xs text-slate-600 leading-relaxed">
+                            Bulutangkis adalah olahraga raket tercepat di dunia! Kecepatan smes tercatat dapat melampaui <strong>500 km/jam</strong>.
+                        </p>
+                    </div>
+                </div>
+            </aside>
+
+            <!-- Area Konten Utama -->
+            <main class="flex-1 min-w-0">
+
+                <!-- =========================================================
+                     BAB 1: SEJARAH & PENGERTIAN BULUTANGKIS
+                ========================================================== -->
+                <section id="tab-sejarah" class="tab-content space-y-6">
+                    <!-- Banner Header Bab -->
+                    <div class="bg-gradient-to-r from-court-800 to-court-600 rounded-3xl p-6 sm:p-8 text-white shadow-md relative overflow-hidden">
+                        <div class="relative z-10 max-w-2xl">
+                            <span class="inline-block bg-shuttle-400 text-court-900 text-xs font-extrabold px-3 py-1 rounded-full uppercase tracking-wide mb-3">Bab 1 • Pengenalan</span>
+                            <h2 class="font-display text-2xl sm:text-3xl font-extrabold mb-2">Sejarah & Pengertian Bulutangkis</h2>
+                            <p class="text-court-100 text-sm sm:text-base leading-relaxed">
+                                Memahami hakikat permainan bulutangkis serta perjalanan panjangnya dari permainan kuno hingga menjadi cabang olahraga Olimpiade bergengsi.
+                            </p>
+                        </div>
+                        <i class="fa-solid fa-landmark text-9xl text-white/10 absolute -right-4 -bottom-6 transform -rotate-12"></i>
+                    </div>
+
+                    <!-- Kartu Pengertian -->
+                    <div class="bg-white rounded-2xl p-6 shadow-sm border border-slate-200">
+                        <h3 class="font-display text-lg font-bold text-court-800 flex items-center gap-2 mb-3">
+                            <i class="fa-solid fa-book-open text-court-600"></i>
+                            Pengertian Permainan Bulutangkis
+                        </h3>
+                        <p class="text-slate-600 text-sm sm:text-base leading-relaxed mb-4">
+                            <strong>Bulutangkis (Badminton)</strong> adalah cabang olahraga permainan bola kecil yang dimainkan oleh dua orang (untuk nomor <em>tunggal/singles</em>) atau dua pasangan (untuk nomor <em>ganda/doubles</em>) yang saling berlawanan. Tujuan utama permainan ini adalah memukul kok (<em>shuttlecock</em>) menggunakan raket agar melewati atas jaring (net) dan jatuh di bidang permainan lawan, serta mencegah lawan melakukan hal yang sama.
+                        </p>
+                        <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 pt-2">
+                            <div class="bg-slate-50 p-4 rounded-xl border border-slate-100">
+                                <span class="text-xs font-bold text-court-600 uppercase">Kategori</span>
+                                <p class="font-bold text-slate-800 mt-1">Permainan Net & Raket</p>
+                            </div>
+                            <div class="bg-slate-50 p-4 rounded-xl border border-slate-100">
+                                <span class="text-xs font-bold text-court-600 uppercase">Induk Dunia</span>
+                                <p class="font-bold text-slate-800 mt-1">BWF (Badminton World Federation)</p>
+                            </div>
+                            <div class="bg-slate-50 p-4 rounded-xl border border-slate-100">
+                                <span class="text-xs font-bold text-court-600 uppercase">Induk Indonesia</span>
+                                <p class="font-bold text-slate-800 mt-1">PBSI (Persatuan Bulutangkis Seluruh Indonesia)</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Timeline Sejarah Interaktif -->
+                    <div class="bg-white rounded-2xl p-6 shadow-sm border border-slate-200">
+                        <h3 class="font-display text-lg font-bold text-court-800 flex items-center gap-2 mb-5">
+                            <i class="fa-solid fa-timeline text-court-600"></i>
+                            Linimasa Sejarah Bulutangkis Dunia & Indonesia
+                        </h3>
+                        
+                        <div class="relative border-l-2 border-court-500 ml-3 sm:ml-4 space-y-6">
+                            <!-- Item 1 -->
+                            <div class="relative pl-6">
+                                <span class="w-4 h-4 rounded-full bg-court-600 border-4 border-court-100 absolute -left-[9px] top-1"></span>
+                                <span class="text-xs font-bold bg-court-100 text-court-800 px-2.5 py-0.5 rounded-md">2000 Tahun Lalu</span>
+                                <h4 class="font-bold text-slate-800 mt-1">Permainan Kuno (Battledore & Shuttlecock)</h4>
+                                <p class="text-sm text-slate-600 mt-1">Permainan memukul bola berbulu menggunakan dayung kayu berkembang di Tiongkok kuno (<em>Ti Jian Zi</em>), Yunani kuno, dan India (disebut <em>Poona</em>).</p>
+                            </div>
+                            <!-- Item 2 -->
+                            <div class="relative pl-6">
+                                <span class="w-4 h-4 rounded-full bg-court-600 border-4 border-court-100 absolute -left-[9px] top-1"></span>
+                                <span class="text-xs font-bold bg-court-100 text-court-800 px-2.5 py-0.5 rounded-md">Abad ke-19 (1873)</span>
+                                <h4 class="font-bold text-slate-800 mt-1">Lahirnya Nama "Badminton" di Inggris</h4>
+                                <p class="text-sm text-slate-600 mt-1">Perwira tentara Inggris membawa permainan <em>Poona</em> dari India ke kediaman Duke of Beaufort di <strong>Badminton House</strong>, Gloucestershire, Inggris. Sejak saat itu olahraga ini dikenal sebagai <em>Badminton</em>.</p>
+                            </div>
+                            <!-- Item 3 -->
+                            <div class="relative pl-6">
+                                <span class="w-4 h-4 rounded-full bg-court-600 border-4 border-court-100 absolute -left-[9px] top-1"></span>
+                                <span class="text-xs font-bold bg-court-100 text-court-800 px-2.5 py-0.5 rounded-md">5 Juli 1934</span>
+                                <h4 class="font-bold text-slate-800 mt-1">Berdirinya IBF (Kini BWF)</h4>
+                                <p class="text-sm text-slate-600 mt-1"><em>International Badminton Federation (IBF)</em> didirikan oleh 9 negara pelopor. Pada tahun 2006, namanya resmi diubah menjadi <strong>Badminton World Federation (BWF)</strong>.</p>
+                            </div>
+                            <!-- Item 4 -->
+                            <div class="relative pl-6">
+                                <span class="w-4 h-4 rounded-full bg-shuttle-500 border-4 border-shuttle-300 absolute -left-[9px] top-1"></span>
+                                <span class="text-xs font-bold bg-shuttle-300 text-court-900 px-2.5 py-0.5 rounded-md">5 Mei 1951 & Olimpiade 1992</span>
+                                <h4 class="font-bold text-slate-800 mt-1">PBSI & Kejayaan Indonesia di Olimpiade</h4>
+                                <p class="text-sm text-slate-600 mt-1">PBSI didirikan di Bandung pada 5 Mei 1951. Pada Olimpiade Barcelona 1992 (saat bulutangkis pertama kali dipertandingkan resmi), Indonesia meraih emas perdana lewat <strong>Susi Susanti</strong> dan <strong>Alan Budikusuma</strong>.</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Navigasi Bawah -->
+                    <div class="flex justify-end">
+                        <button onclick="switchTab('lapangan')" class="bg-court-700 hover:bg-court-800 text-white font-semibold px-6 py-3 rounded-xl shadow flex items-center gap-2 transition">
+                            <span>Lanjut ke Bab 2: Perlengkapan & Lapangan</span>
+                            <i class="fa-solid fa-arrow-right"></i>
+                        </button>
+                    </div>
+                </section>
+
+                <!-- =========================================================
+                     BAB 2: PERLENGKAPAN & UKURAN LAPANGAN (INTERAKTIF SVG)
+                ========================================================== -->
+                <section id="tab-lapangan" class="tab-content hidden space-y-6">
+                    <div class="bg-gradient-to-r from-court-800 to-court-600 rounded-3xl p-6 sm:p-8 text-white shadow-md relative overflow-hidden">
+                        <div class="relative z-10 max-w-2xl">
+                            <span class="inline-block bg-shuttle-400 text-court-900 text-xs font-extrabold px-3 py-1 rounded-full uppercase tracking-wide mb-3">Bab 2 • Sarana & Prasarana</span>
+                            <h2 class="font-display text-2xl sm:text-3xl font-extrabold mb-2">Perlengkapan & Ukuran Lapangan</h2>
+                            <p class="text-court-100 text-sm sm:text-base leading-relaxed">
+                                Eksplorasi ukuran lapangan standar internasional BWF secara interaktif serta spesifikasi peralatan utama bulutangkis.
+                            </p>
+                        </div>
+                        <i class="fa-solid fa-ruler-combined text-9xl text-white/10 absolute -right-4 -bottom-6"></i>
+                    </div>
+
+                    <!-- DIAGRAM LAPANGAN INTERAKTIF -->
+                    <div class="bg-white rounded-2xl p-5 sm:p-6 shadow-sm border border-slate-200">
+                        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-4">
+                            <div>
+                                <h3 class="font-display text-lg font-bold text-court-800 flex items-center gap-2">
+                                    <i class="fa-solid fa-vector-square text-court-600"></i>
+                                    Diagram Lapangan Bulutangkis Interaktif
+                                </h3>
+                                <p class="text-xs sm:text-sm text-slate-500">Klik tombol mode atau klik area pada lapangan hijau untuk melihat detail fungsi garis & ukuran.</p>
+                            </div>
+                            
+                            <!-- Filter Mode Tampilan Lapangan -->
+                            <div class="flex flex-wrap gap-2">
+                                <button onclick="setCourtMode('all')" id="btn-court-all" class="court-mode-btn bg-court-700 text-white text-xs font-bold px-3 py-2 rounded-lg transition">Semua Ukuran</button>
+                                <button onclick="setCourtMode('singles')" id="btn-court-singles" class="court-mode-btn bg-slate-100 text-slate-700 hover:bg-slate-200 text-xs font-bold px-3 py-2 rounded-lg transition">Area Tunggal</button>
+                                <button onclick="setCourtMode('doubles')" id="btn-court-doubles" class="court-mode-btn bg-slate-100 text-slate-700 hover:bg-slate-200 text-xs font-bold px-3 py-2 rounded-lg transition">Area Ganda</button>
+                            </div>
+                        </div>
+
+                        <!-- Info Box Dinamis Saat Area Diklik -->
+                        <div id="court-info-banner" class="bg-court-50 border border-court-200 rounded-xl p-3.5 mb-4 flex items-start gap-3">
+                            <i class="fa-solid fa-hand-pointer text-court-600 mt-0.5 text-lg"></i>
+                            <div>
+                                <h4 id="court-zone-title" class="font-bold text-court-900 text-sm">Lapangan Standar Internasional BWF (13,40 m × 6,10 m)</h4>
+                                <p id="court-zone-desc" class="text-xs sm:text-sm text-slate-600 mt-0.5">Silakan klik pada bagian-bagian lapangan di bawah ini (seperti Area Servis, Garis Samping, atau Net) untuk mempelajari fungsinya.</p>
+                            </div>
+                        </div>
+
+                        <!-- SVG Lapangan Responsif -->
+                        <div class="w-full overflow-x-auto bg-slate-900 rounded-2xl p-4 sm:p-6 flex justify-center">
+                            <svg viewBox="0 0 760 380" class="w-full max-w-3xl h-auto select-none" id="badminton-court-svg">
+                                <!-- Latar Luar Lapangan -->
+                                <rect x="50" y="30" width="660" height="310" rx="6" fill="#15803d" stroke="#ffffff" stroke-width="3"/>
+                                
+                                <!-- Highlight Area Tunggal (Singles) -->
+                                <rect id="highlight-singles" x="50" y="53" width="660" height="264" fill="#facc15" fill-opacity="0" pointer-events="none"/>
+                                <!-- Highlight Area Ganda (Doubles) -->
+                                <rect id="highlight-doubles" x="50" y="30" width="660" height="310" fill="#38bdf8" fill-opacity="0" pointer-events="none"/>
+
+                                <!-- ZONA INTERAKTIF KIRI (Sisi Pemain A) -->
+                                <!-- Area Servis Kiri Atas (Even/Genap) -->
+                                <rect class="court-zone" x="88" y="53" width="194" height="132" fill="#ffffff" fill-opacity="0"
+                                    onclick="showCourtInfo('Kotak Servis Kanan / Genap (Right Service Court)', 'Digunakan untuk melakukan dan menerima servis saat poin pelaku servis bernilai GENAP (0, 2, 4, dst). Pada permainan ganda, garis belakang servis lebih pendek 0,76 m.')"/>
+                                <!-- Area Servis Kiri Bawah (Odd/Ganjil) -->
+                                <rect class="court-zone" x="88" y="185" width="194" height="132" fill="#ffffff" fill-opacity="0"
+                                    onclick="showCourtInfo('Kotak Servis Kiri / Ganjil (Left Service Court)', 'Digunakan untuk melakukan dan menerima servis saat poin pelaku servis bernilai GANJIL (1, 3, 5, dst). Kok harus diarahkan menyilang ke kotak servis lawan.')"/>
+                                <!-- Lorong Belakang (Back Gallery) -->
+                                <rect class="court-zone" x="50" y="30" width="38" height="310" fill="#facc15" fill-opacity="0"
+                                    onclick="showCourtInfo('Lorong Belakang (Back Boundary Alley - Lebar 0,76 m)', 'Saat SERVIS GANDA, area ini dinyatakan OUT (keluar). Namun setelah servis dikembalikan (reli berlangsung), area ini kembali IN (sah) untuk tunggal maupun ganda.')"/>
+                                <!-- Area Depan Net (Non-Volley / Short Service Area) -->
+                                <rect class="court-zone" x="282" y="30" width="98" height="310" fill="#facc15" fill-opacity="0"
+                                    onclick="showCourtInfo('Area Depan Garis Servis Pendek (Jarak 1,98 m dari Net)', 'Saat melakukan servis, kok HARUS melewati garis ini. Jika kok jatuh di area ini saat servis, maka dianggap pelanggaran (Fault).')"/>
+
+                                <!-- ZONA INTERAKTIF KANAN (Sisi Pemain B) -->
+                                <rect class="court-zone" x="380" y="30" width="98" height="310" fill="#facc15" fill-opacity="0"
+                                    onclick="showCourtInfo('Area Depan Net Sisi Lawan (1,98 m)', 'Area permainan netting (pukulan tipis di depan net). Pemain dilarang menyentuh net dengan raket maupun anggota tubuh.')"/>
+                                <rect class="court-zone" x="478" y="53" width="194" height="132" fill="#ffffff" fill-opacity="0"
+                                    onclick="showCourtInfo('Kotak Servis Kiri Lawan', 'Target jatuhnya kok apabila server melakukan servis dari kotak servis sisi seberang secara diagonal.')"/>
+                                <rect class="court-zone" x="478" y="185" width="194" height="132" fill="#ffffff" fill-opacity="0"
+                                    onclick="showCourtInfo('Kotak Servis Kanan Lawan', 'Target jatuhnya kok secara menyilang (diagonal). Dalam bulutangkis, servis selalu dilakukan secara diagonal.')"/>
+                                <rect class="court-zone" x="672" y="30" width="38" height="310" fill="#facc15" fill-opacity="0"
+                                    onclick="showCourtInfo('Lorong Belakang (Lebar 0,76 m)', 'Batas belakang permainan tunggal sekaligus batas belakang reli ganda.')"/>
+
+                                <!-- Lorong Samping Atas & Bawah (Side Alley) -->
+                                <rect class="court-zone" x="50" y="30" width="660" height="23" fill="#38bdf8" fill-opacity="0"
+                                    onclick="showCourtInfo('Lorong Samping (Side Alley - Lebar 0,46 m)', 'Area ini OUT (keluar) untuk permainan TUNGGAL (Singles), tetapi IN (sah) untuk permainan GANDA (Doubles) sepanjang permainan.')"/>
+                                <rect class="court-zone" x="50" y="317" width="660" height="23" fill="#38bdf8" fill-opacity="0"
+                                    onclick="showCourtInfo('Lorong Samping (Side Alley - Lebar 0,46 m)', 'Lebar lapangan tunggal adalah 5,18 m, sedangkan lapangan ganda menggunakan garis terluar selebar 6,10 m.')"/>
+
+                                <!-- GARIS-GARIS LAPANGAN RESMI (PUTIH) -->
+                                <!-- Garis Samping Tunggal (Singles Sideline) -->
+                                <line x1="50" y1="53" x2="710" y2="53" stroke="#ffffff" stroke-width="2.5"/>
+                                <line x1="50" y1="317" x2="710" y2="317" stroke="#ffffff" stroke-width="2.5"/>
+
+                                <!-- Garis Servis Belakang Ganda (Doubles Long Service Line) -->
+                                <line x1="88" y1="30" x2="88" y2="340" stroke="#ffffff" stroke-width="2.5"/>
+                                <line x1="672" y1="30" x2="672" y2="340" stroke="#ffffff" stroke-width="2.5"/>
+
+                                <!-- Garis Servis Pendek (Short Service Line) -->
+                                <line x1="282" y1="30" x2="282" y2="340" stroke="#ffffff" stroke-width="2.5"/>
+                                <line x1="478" y1="30" x2="478" y2="340" stroke="#ffffff" stroke-width="2.5"/>
+
+                                <!-- Garis Tengah (Center Line) -->
+                                <line x1="50" y1="185" x2="282" y2="185" stroke="#ffffff" stroke-width="2.5"/>
+                                <line x1="478" y1="185" x2="710" y2="185" stroke="#ffffff" stroke-width="2.5"/>
+
+                                <!-- GARIS NET DI TENGAH -->
+                                <line x1="380" y1="20" x2="380" y2="350" stroke="#facc15" stroke-width="4" stroke-dasharray="8,4"/>
+                                <circle cx="380" cy="22" r="5" fill="#facc15"/>
+                                <circle cx="380" cy="348" r="5" fill="#facc15"/>
+                                <rect x="355" y="168" width="50" height="22" rx="4" fill="#facc15" class="cursor-pointer"
+                                    onclick="showCourtInfo('Jaring / Net (Tinggi 1,55 m di tiang & 1,524 m di tengah)', 'Tiang net dipasang tepat di garis samping ganda dengan tinggi 1,55 meter. Bagian tengah net sedikit melengkung dengan tinggi 1,524 meter.')"/>
+                                <text x="380" y="183" text-anchor="middle" fill="#14532d" font-size="11" font-weight="bold" pointer-events="none">NET</text>
+
+                                <!-- LABEL UKURAN DIMENSI -->
+                                <!-- Panjang Total 13.40m -->
+                                <line x1="50" y1="362" x2="710" y2="362" stroke="#94a3b8" stroke-width="1.5"/>
+                                <text x="380" y="375" text-anchor="middle" fill="#f8fafc" font-size="12" font-weight="bold">Panjang Total Lapangan: 13,40 meter</text>
+
+                                <!-- Lebar Total 6.10m -->
+                                <text x="732" y="185" text-anchor="middle" fill="#f8fafc" font-size="12" font-weight="bold" transform="rotate(90 732 185)">Lebar Ganda: 6,10 m (Tunggal: 5,18 m)</text>
+
+                                <!-- Label Jarak Servis -->
+                                <text x="331" y="45" text-anchor="middle" fill="#fde047" font-size="10" font-weight="bold">1,98 m</text>
+                                <text x="429" y="45" text-anchor="middle" fill="#fde047" font-size="10" font-weight="bold">1,98 m</text>
+                                <text x="69" y="180" text-anchor="middle" fill="#fde047" font-size="9" font-weight="bold">0,76m</text>
+                            </svg>
+                        </div>
+                    </div>
+
+                    <!-- Spesifikasi Perlengkapan Utama -->
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-5">
+                        <!-- Raket -->
+                        <div class="bg-white rounded-2xl p-5 shadow-sm border border-slate-200 hover:border-court-500 transition">
+                            <div class="w-12 h-12 rounded-xl bg-court-100 text-court-700 flex items-center justify-center text-xl mb-4">
+                                <i class="fa-solid fa-table-tennis-paddle-ball"></i>
+                            </div>
+                            <h4 class="font-display font-bold text-slate-800 text-base mb-2">1. Raket (Racket)</h4>
+                            <ul class="text-sm text-slate-600 space-y-1.5 list-disc list-inside">
+                                <li>Panjang maksimal: <strong>68 cm</strong></li>
+                                <li>Lebar kepala raket: <strong>23 cm</strong></li>
+                                <li>Berat modern: <strong>75 – 95 gram</strong> (bahan serat karbon / grafit)</li>
+                                <li>Tarikan senar: Umumnya <strong>22 – 32 lbs</strong> sesuai gaya bermain.</li>
+                            </ul>
+                        </div>
+
+                        <!-- Kok / Shuttlecock -->
+                        <div class="bg-white rounded-2xl p-5 shadow-sm border border-slate-200 hover:border-court-500 transition">
+                            <div class="w-12 h-12 rounded-xl bg-shuttle-300/40 text-shuttle-500 flex items-center justify-center text-xl mb-4">
+                                <i class="fa-solid fa-feather-pointed"></i>
+                            </div>
+                            <h4 class="font-display font-bold text-slate-800 text-base mb-2">2. Kok (Shuttlecock)</h4>
+                            <ul class="text-sm text-slate-600 space-y-1.5 list-disc list-inside">
+                                <li>Jumlah bulu: <strong>16 helai</strong> bulu angsa/bebek yang tertancap pada gabus.</li>
+                                <li>Berat kok standar: <strong>4,74 – 5,50 gram</strong>.</li>
+                                <li>Panjang bulu: <strong>62 – 70 mm</strong>.</li>
+                                <li>Diameter gabus: <strong>25 – 28 mm</strong>.</li>
+                            </ul>
+                        </div>
+
+                        <!-- Net & Tiang -->
+                        <div class="bg-white rounded-2xl p-5 shadow-sm border border-slate-200 hover:border-court-500 transition">
+                            <div class="w-12 h-12 rounded-xl bg-court-100 text-court-700 flex items-center justify-center text-xl mb-4">
+                                <i class="fa-solid fa-border-all"></i>
+                            </div>
+                            <h4 class="font-display font-bold text-slate-800 text-base mb-2">3. Net & Tiang Net</h4>
+                            <ul class="text-sm text-slate-600 space-y-1.5 list-disc list-inside">
+                                <li>Tinggi tiang net: <strong>1,55 meter</strong> dari lantai.</li>
+                                <li>Tinggi bagian tengah net: <strong>1,524 meter</strong>.</li>
+                                <li>Lebar jaring net: <strong>76 cm</strong> dengan pita putih di bagian atas selebar 7,5 cm.</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <div class="flex justify-between">
+                        <button onclick="switchTab('sejarah')" class="bg-slate-200 hover:bg-slate-300 text-slate-700 font-semibold px-5 py-3 rounded-xl transition flex items-center gap-2">
+                            <i class="fa-solid fa-arrow-left"></i>
+                            <span>Bab 1</span>
+                        </button>
+                        <button onclick="switchTab('teknik')" class="bg-court-700 hover:bg-court-800 text-white font-semibold px-6 py-3 rounded-xl shadow flex items-center gap-2 transition">
+                            <span>Lanjut ke Bab 3: Teknik Dasar</span>
+                            <i class="fa-solid fa-arrow-right"></i>
+                        </button>
+                    </div>
+                </section>
+
+                <!-- =========================================================
+                     BAB 3: TEKNIK DASAR BULUTANGKIS
+                ========================================================== -->
+                <section id="tab-teknik" class="tab-content hidden space-y-6">
+                    <div class="bg-gradient-to-r from-court-800 to-court-600 rounded-3xl p-6 sm:p-8 text-white shadow-md relative overflow-hidden">
+                        <div class="relative z-10 max-w-2xl">
+                            <span class="inline-block bg-shuttle-400 text-court-900 text-xs font-extrabold px-3 py-1 rounded-full uppercase tracking-wide mb-3">Bab 3 • Keterampilan Gerak</span>
+                            <h2 class="font-display text-2xl sm:text-3xl font-extrabold mb-2">Teknik Dasar Permainan Bulutangkis</h2>
+                            <p class="text-court-100 text-sm sm:text-base leading-relaxed">
+                                Menguasai cara memegang raket (grip), gerakan kaki (footwork), teknik servis, hingga variasi pukulan menyerang dan bertahan.
+                            </p>
+                        </div>
+                        <i class="fa-solid fa-person-running text-9xl text-white/10 absolute -right-4 -bottom-6"></i>
+                    </div>
+
+                    <!-- Sub-Navigasi Kategori Teknik -->
+                    <div class="flex flex-wrap gap-2 bg-white p-2 rounded-2xl border border-slate-200 shadow-sm">
+                        <button onclick="filterTeknik('all')" class="teknik-filter-btn bg-court-700 text-white text-xs sm:text-sm font-bold px-4 py-2 rounded-xl transition">Semua Teknik</button>
+                        <button onclick="filterTeknik('grip')" class="teknik-filter-btn bg-slate-100 text-slate-700 hover:bg-slate-200 text-xs sm:text-sm font-bold px-4 py-2 rounded-xl transition">1. Memegang Raket (Grip)</button>
+                        <button onclick="filterTeknik('footwork')" class="teknik-filter-btn bg-slate-100 text-slate-700 hover:bg-slate-200 text-xs sm:text-sm font-bold px-4 py-2 rounded-xl transition">2. Footwork & Servis</button>
+                        <button onclick="filterTeknik('pukulan')" class="teknik-filter-btn bg-slate-100 text-slate-700 hover:bg-slate-200 text-xs sm:text-sm font-bold px-4 py-2 rounded-xl transition">3. Jenis Pukulan (Strokes)</button>
+                    </div>
+
+                    <!-- Grid Kartu Materi Teknik -->
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-5" id="teknik-container">
+                        
+                        <!-- 1. Forehand Grip -->
+                        <div data-cat="grip" class="teknik-card bg-white rounded-2xl p-6 shadow-sm border border-slate-200 flex flex-col justify-between">
+                            <div>
+                                <div class="flex items-center justify-between mb-3">
+                                    <span class="text-xs font-bold bg-court-100 text-court-800 px-3 py-1 rounded-full">Teknik Pegangan (Grip)</span>
+                                    <i class="fa-solid fa-hand text-court-600 text-lg"></i>
+                                </div>
+                                <h3 class="font-display font-bold text-lg text-slate-800 mb-2">Forehand Grip (Pegangan Jabat Tangan)</h3>
+                                <p class="text-sm text-slate-600 leading-relaxed mb-3">
+                                    Pegangan dasar yang paling sering digunakan. Raket dipegang seperti sedang <strong>berjabat tangan</strong> dengan seseorang.
+                                </p>
+                                <div class="bg-slate-50 p-3.5 rounded-xl text-xs text-slate-700 space-y-1.5 border border-slate-100">
+                                    <p><strong>Langkah pelaksanaan:</strong></p>
+                                    <p>• Posisikan kepala raket menyamping (tegak lurus lantai).</p>
+                                    <p>• Ibu jari dan jari telunjuk membentuk huruf <strong>"V"</strong> di bagian sudut pegangan raket.</p>
+                                    <p>• Jari tengah, manis, dan kelingking menggenggam gagang dengan rileks.</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- 2. Backhand Grip -->
+                        <div data-cat="grip" class="teknik-card bg-white rounded-2xl p-6 shadow-sm border border-slate-200 flex flex-col justify-between">
+                            <div>
+                                <div class="flex items-center justify-between mb-3">
+                                    <span class="text-xs font-bold bg-court-100 text-court-800 px-3 py-1 rounded-full">Teknik Pegangan (Grip)</span>
+                                    <i class="fa-solid fa-thumbs-up text-court-600 text-lg"></i>
+                                </div>
+                                <h3 class="font-display font-bold text-lg text-slate-800 mb-2">Backhand Grip (Pegangan Ibu Jari)</h3>
+                                <p class="text-sm text-slate-600 leading-relaxed mb-3">
+                                    Digunakan untuk memukul kok yang datang di sisi kiri tubuh (bagi pemain bertangan kanan) agar menghasilkan tenaga dorongan kuat.
+                                </p>
+                                <div class="bg-slate-50 p-3.5 rounded-xl text-xs text-slate-700 space-y-1.5 border border-slate-100">
+                                    <p><strong>Langkah pelaksanaan:</strong></p>
+                                    <p>• Putar raket seperempat putaran ke arah dalam dari posisi <em>forehand</em>.</p>
+                                    <p>• Tempelkan <strong>ibu jari pada permukaan lebar</strong> pegangan raket untuk menjadi tumpuan dorongan.</p>
+                                    <p>• Sangat efektif untuk servis pendek, netting, dan defense smes.</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- 3. Footwork -->
+                        <div data-cat="footwork" class="teknik-card bg-white rounded-2xl p-6 shadow-sm border border-slate-200">
+                            <div class="flex items-center justify-between mb-3">
+                                <span class="text-xs font-bold bg-blue-100 text-blue-800 px-3 py-1 rounded-full">Gerakan Kaki</span>
+                                <i class="fa-solid fa-shoe-prints text-blue-600 text-lg"></i>
+                            </div>
+                            <h3 class="font-display font-bold text-lg text-slate-800 mb-2">Footwork (Langkah Kaki)</h3>
+                            <p class="text-sm text-slate-600 leading-relaxed mb-3">
+                                Footwork adalah pengaturan langkah kaki yang efisien untuk menjangkau kok di seluruh sudut lapangan dengan cepat dan tetap seimbang.
+                            </p>
+                            <div class="bg-slate-50 p-3.5 rounded-xl text-xs text-slate-700 space-y-1.5 border border-slate-100">
+                                <p><strong>Prinsip Utama Footwork:</strong></p>
+                                <p>• Selalu kembali ke titik tengah lapangan (<em>base position</em>) setelah memukul.</p>
+                                <p>• Gunakan langkah <em>split-step</em> (lompatan kecil) sebelum lawan memukul kok.</p>
+                                <p>• Langkah terakhir saat menjangkau kok di depan menggunakan kaki dominan (kanan untuk pemain tangan kanan).</p>
+                            </div>
+                        </div>
+
+                        <!-- 4. Servis Panjang & Pendek -->
+                        <div data-cat="footwork" class="teknik-card bg-white rounded-2xl p-6 shadow-sm border border-slate-200">
+                            <div class="flex items-center justify-between mb-3">
+                                <span class="text-xs font-bold bg-blue-100 text-blue-800 px-3 py-1 rounded-full">Pukulan Pembuka</span>
+                                <i class="fa-solid fa-paper-plane text-blue-600 text-lg"></i>
+                            </div>
+                            <h3 class="font-display font-bold text-lg text-slate-800 mb-2">Servis Pendek & Servis Panjang</h3>
+                            <p class="text-sm text-slate-600 leading-relaxed mb-3">
+                                Pukulan pertama untuk memulai reli. Sesuai aturan BWF, seluruh bagian kok harus berada di bawah ketinggian <strong>1,15 meter</strong> saat dipukul.
+                            </p>
+                            <div class="bg-slate-50 p-3.5 rounded-xl text-xs text-slate-700 space-y-1.5 border border-slate-100">
+                                <p>• <strong>Servis Pendek (Backhand):</strong> Kok melintas tipis di atas net dan jatuh tepat di belakang garis servis pendek lawan. Umum dipakai pada nomor <em>Ganda</em>.</p>
+                                <p>• <strong>Servis Panjang (Forehand):</strong> Kok dipukul tinggi melambung jauh ke garis belakang lapangan lawan. Umum dipakai pada nomor <em>Tunggal</em>.</p>
+                            </div>
+                        </div>
+
+                        <!-- 5. Pukulan Lob (Clear) -->
+                        <div data-cat="pukulan" class="teknik-card bg-white rounded-2xl p-6 shadow-sm border border-slate-200">
+                            <div class="flex items-center justify-between mb-3">
+                                <span class="text-xs font-bold bg-amber-100 text-amber-800 px-3 py-1 rounded-full">Jenis Pukulan</span>
+                                <i class="fa-solid fa-arrow-trend-up text-amber-600 text-lg"></i>
+                            </div>
+                            <h3 class="font-display font-bold text-lg text-slate-800 mb-2">Pukulan Lob / Clear</h3>
+                            <p class="text-sm text-slate-600 leading-relaxed mb-3">
+                                Pukulan melambung tinggi ke arah garis belakang lapangan lawan. Berfungsi untuk mengatur tempo permainan, bertahan, atau mendorong lawan ke belakang.
+                            </p>
+                            <div class="bg-slate-50 p-3.5 rounded-xl text-xs text-slate-700 space-y-1 border border-slate-100">
+                                <p>• <strong>Overhead Lob:</strong> Pukulan lob yang dilakukan dari atas kepala.</p>
+                                <p>• <strong>Underhand Lob:</strong> Pukulan lob yang dilakukan dari bawah untuk mengembalikan dropshot/netting lawan.</p>
+                            </div>
+                        </div>
+
+                        <!-- 6. Pukulan Smash -->
+                        <div data-cat="pukulan" class="teknik-card bg-white rounded-2xl p-6 shadow-sm border border-slate-200">
+                            <div class="flex items-center justify-between mb-3">
+                                <span class="text-xs font-bold bg-red-100 text-red-800 px-3 py-1 rounded-full">Pukulan Serangan Utama</span>
+                                <i class="fa-solid fa-bolt text-red-600 text-lg"></i>
+                            </div>
+                            <h3 class="font-display font-bold text-lg text-slate-800 mb-2">Pukulan Smash</h3>
+                            <p class="text-sm text-slate-600 leading-relaxed mb-3">
+                                Pukulan menyerang yang dilakukan dari atas kepala dengan tenaga penuh sehingga kok meluncur <strong>tajam, menukik, dan sangat cepat</strong> ke area lawan.
+                            </p>
+                            <div class="bg-slate-50 p-3.5 rounded-xl text-xs text-slate-700 space-y-1 border border-slate-100">
+                                <p>• Pukul kok pada titik jangkauan tertinggi di depan badan.</p>
+                                <p>• Gunakan lecutan pergelangan tangan (<em>wrist snap</em>) untuk memaksimalkan kecepatan sudut tukikan kok.</p>
+                            </div>
+                        </div>
+
+                        <!-- 7. Pukulan Dropshot -->
+                        <div data-cat="pukulan" class="teknik-card bg-white rounded-2xl p-6 shadow-sm border border-slate-200">
+                            <div class="flex items-center justify-between mb-3">
+                                <span class="text-xs font-bold bg-purple-100 text-purple-800 px-3 py-1 rounded-full">Pukulan Tipuan</span>
+                                <i class="fa-solid fa-feather text-purple-600 text-lg"></i>
+                            </div>
+                            <h3 class="font-display font-bold text-lg text-slate-800 mb-2">Pukulan Dropshot</h3>
+                            <p class="text-sm text-slate-600 leading-relaxed mb-3">
+                                Pukulan yang gerakannya menyerupai smash, namun saat perkenaan kok sentuhannya dilemahkan/dipotong sehingga kok jatuh <strong>sedekat mungkin dengan net</strong> di area lawan.
+                            </p>
+                            <div class="bg-slate-50 p-3.5 rounded-xl text-xs text-slate-700 space-y-1 border border-slate-100">
+                                <p>• Sangat efektif mengecoh lawan yang sudah bersiap di bagian belakang lapangan.</p>
+                            </div>
+                        </div>
+
+                        <!-- 8. Pukulan Netting -->
+                        <div data-cat="pukulan" class="teknik-card bg-white rounded-2xl p-6 shadow-sm border border-slate-200">
+                            <div class="flex items-center justify-between mb-3">
+                                <span class="text-xs font-bold bg-emerald-100 text-emerald-800 px-3 py-1 rounded-full">Permainan Depan</span>
+                                <i class="fa-solid fa-bullseye text-emerald-600 text-lg"></i>
+                            </div>
+                            <h3 class="font-display font-bold text-lg text-slate-800 mb-2">Pukulan Netting</h3>
+                            <p class="text-sm text-slate-600 leading-relaxed mb-3">
+                                Pukulan halus yang dilakukan di dekat net untuk mengarahkan kok bergulir tipis melewati bibir net dan jatuh sedekat mungkin di area depan lawan.
+                            </p>
+                            <div class="bg-slate-50 p-3.5 rounded-xl text-xs text-slate-700 space-y-1 border border-slate-100">
+                                <p>• Membutuhkan kontrol perasaan (<em>touch</em>) yang halus dan kepala raket yang rileks.</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="flex justify-between">
+                        <button onclick="switchTab('lapangan')" class="bg-slate-200 hover:bg-slate-300 text-slate-700 font-semibold px-5 py-3 rounded-xl transition flex items-center gap-2">
+                            <i class="fa-solid fa-arrow-left"></i>
+                            <span>Bab 2</span>
+                        </button>
+                        <button onclick="switchTab('peraturan')" class="bg-court-700 hover:bg-court-800 text-white font-semibold px-6 py-3 rounded-xl shadow flex items-center gap-2 transition">
+                            <span>Lanjut ke Bab 4: Peraturan & Skor</span>
+                            <i class="fa-solid fa-arrow-right"></i>
+                        </button>
+                    </div>
+                </section>
+
+                <!-- =========================================================
+                     BAB 4: PERATURAN & SISTEM SKOR
+                ========================================================== -->
+                <section id="tab-peraturan" class="tab-content hidden space-y-6">
+                    <div class="bg-gradient-to-r from-court-800 to-court-600 rounded-3xl p-6 sm:p-8 text-white shadow-md relative overflow-hidden">
+                        <div class="relative z-10 max-w-2xl">
+                            <span class="inline-block bg-shuttle-400 text-court-900 text-xs font-extrabold px-3 py-1 rounded-full uppercase tracking-wide mb-3">Bab 4 • Regulasi BWF</span>
+                            <h2 class="font-display text-2xl sm:text-3xl font-extrabold mb-2">Peraturan & Sistem Perhitungan Skor</h2>
+                            <p class="text-court-100 text-sm sm:text-base leading-relaxed">
+                                Pahami sistem Rally Point 21, aturan posisi servis ganjil/genap, serta jenis-jenis pelanggaran (fault) dalam pertandingan resmi.
+                            </p>
+                        </div>
+                        <i class="fa-solid fa-scale-balanced text-9xl text-white/10 absolute -right-4 -bottom-6"></i>
+                    </div>
+
+                    <!-- Sistem Skor Rally Point 21 -->
+                    <div class="bg-white rounded-2xl p-6 shadow-sm border border-slate-200">
+                        <h3 class="font-display text-lg font-bold text-court-800 flex items-center gap-2 mb-4">
+                            <i class="fa-solid fa-scoreboard text-court-600"></i>
+                            Sistem Skor Rally Point (3 × 21 Poin)
+                        </h3>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <div class="p-4 bg-court-50 rounded-xl border border-court-100">
+                                <h4 class="font-bold text-court-900 text-sm mb-1.5">1. Format Kemenangan (Best of Three)</h4>
+                                <p class="text-xs sm:text-sm text-slate-600 leading-relaxed">
+                                    Pertandingan menggunakan sistem <strong>Best of Three Games</strong> (pemenang 2 set lebih dulu). Setiap set dimenangkan oleh pemain/pasangan yang mencapai <strong>21 poin</strong> terlebih dahulu.
+                                </p>
+                            </div>
+                            <div class="p-4 bg-court-50 rounded-xl border border-court-100">
+                                <h4 class="font-bold text-court-900 text-sm mb-1.5">2. Prinsip Rally Point</h4>
+                                <p class="text-xs sm:text-sm text-slate-600 leading-relaxed">
+                                    Setiap kali terjadi reli, pihak yang memenangkan reli langsung mendapatkan <strong>1 poin</strong> dan berhak melakukan servis berikutnya (tidak ada lagi pindah bola tanpa poin).
+                                </p>
+                            </div>
+                            <div class="p-4 bg-shuttle-300/25 rounded-xl border border-shuttle-400/50">
+                                <h4 class="font-bold text-court-900 text-sm mb-1.5">3. Aturan Deuce / Setting (20 – 20)</h4>
+                                <p class="text-xs sm:text-sm text-slate-600 leading-relaxed">
+                                    Jika skor imbang <strong>20–20</strong>, pertandingan dilanjutkan hingga salah satu pihak unggul <strong>selisih 2 poin</strong> (misal 22–20). Jika terus imbang hingga <strong>29–29</strong>, pihak yang meraih poin ke-<strong>30</strong> langsung memenangkan set tersebut.
+                                </p>
+                            </div>
+                            <div class="p-4 bg-slate-50 rounded-xl border border-slate-200">
+                                <h4 class="font-bold text-slate-800 text-sm mb-1.5">4. Interval & Pindah Lapangan</h4>
+                                <p class="text-xs sm:text-sm text-slate-600 leading-relaxed">
+                                    Saat skor mencapai <strong>11 poin</strong>, pemain mendapat waktu istirahat (interval) selama 60 detik. Pemain bertukar tempat lapangan setiap pergantian set, dan pada poin ke-11 di set ketiga (rubber game).
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- SIMULATOR POSISI SERVIS INTERAKTIF -->
+                    <div class="bg-white rounded-2xl p-6 shadow-sm border border-slate-200">
+                        <h3 class="font-display text-lg font-bold text-court-800 flex items-center gap-2 mb-2">
+                            <i class="fa-solid fa-calculator text-court-600"></i>
+                            Simulasi Posisi Kotak Servis (Ganjil vs Genap)
+                        </h3>
+                        <p class="text-xs sm:text-sm text-slate-500 mb-4">Coba masukkan skor pelaku servis untuk mengetahui di kotak mana ia harus berdiri!</p>
+                        
+                        <div class="flex flex-col sm:flex-row items-center gap-4 bg-slate-50 p-4 rounded-xl border border-slate-200">
+                            <div class="flex items-center gap-3">
+                                <label for="sim-score" class="text-sm font-bold text-slate-700">Skor Server:</label>
+                                <input type="number" id="sim-score" min="0" max="29" value="0" onchange="updateServeSimulator()" oninput="updateServeSimulator()" class="w-20 px-3 py-2 rounded-lg border border-slate-300 font-bold text-center text-court-800 focus:outline-none focus:ring-2 focus:ring-court-500">
+                            </div>
+                            <div id="sim-result" class="flex-1 text-sm font-medium text-court-800 bg-court-100 px-4 py-2.5 rounded-lg border border-court-200 w-full">
+                                Skor <strong>0 (GENAP)</strong> → Server berdiri di <strong>Kotak Servis KANAN</strong> dan mengarahkan kok menyilang ke kotak servis kanan lawan.
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Jenis Pelanggaran (Fault) -->
+                    <div class="bg-white rounded-2xl p-6 shadow-sm border border-slate-200">
+                        <h3 class="font-display text-lg font-bold text-red-700 flex items-center gap-2 mb-4">
+                            <i class="fa-solid fa-triangle-exclamation text-red-600"></i>
+                            Pelanggaran Umum dalam Permainan (Fault)
+                        </h3>
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 text-sm text-slate-700">
+                            <div class="flex items-start gap-2.5 p-3 rounded-xl bg-red-50/60 border border-red-100">
+                                <i class="fa-solid fa-circle-xmark text-red-500 mt-1"></i>
+                                <span>Saat servis, posisi kok berada di atas <strong>1,15 meter</strong> dari permukaan lapangan ketika dipukul.</span>
+                            </div>
+                            <div class="flex items-start gap-2.5 p-3 rounded-xl bg-red-50/60 border border-red-100">
+                                <i class="fa-solid fa-circle-xmark text-red-500 mt-1"></i>
+                                <span>Kok jatuh di luar garis batas lapangan (<em>out</em>) atau menyangkut di net.</span>
+                            </div>
+                            <div class="flex items-start gap-2.5 p-3 rounded-xl bg-red-50/60 border border-red-100">
+                                <i class="fa-solid fa-circle-xmark text-red-500 mt-1"></i>
+                                <span>Raket, pakaian, atau anggota tubuh pemain <strong>menyentuh net</strong> saat permainan berlangsung.</span>
+                            </div>
+                            <div class="flex items-start gap-2.5 p-3 rounded-xl bg-red-50/60 border border-red-100">
+                                <i class="fa-solid fa-circle-xmark text-red-500 mt-1"></i>
+                                <span>Memukul kok dua kali beruntun (<em>double hit</em>) oleh satu pemain atau dua pemain dalam satu tim.</span>
+                            </div>
+                            <div class="flex items-start gap-2.5 p-3 rounded-xl bg-red-50/60 border border-red-100">
+                                <i class="fa-solid fa-circle-xmark text-red-500 mt-1"></i>
+                                <span>Raket melewati bagian atas net ke area lawan sebelum kok dipukul (<em>over-netting</em>).</span>
+                            </div>
+                            <div class="flex items-start gap-2.5 p-3 rounded-xl bg-red-50/60 border border-red-100">
+                                <i class="fa-solid fa-circle-xmark text-red-500 mt-1"></i>
+                                <span>Kaki pelaku servis atau penerima servis terangkat/menginjak garis sebelum kok dipukul.</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="flex justify-between">
+                        <button onclick="switchTab('teknik')" class="bg-slate-200 hover:bg-slate-300 text-slate-700 font-semibold px-5 py-3 rounded-xl transition flex items-center gap-2">
+                            <i class="fa-solid fa-arrow-left"></i>
+                            <span>Bab 3</span>
+                        </button>
+                        <button onclick="switchTab('kuis')" class="bg-shuttle-400 hover:bg-shuttle-300 text-court-900 font-extrabold px-6 py-3 rounded-xl shadow flex items-center gap-2 transition">
+                            <span>Uji Pemahaman: Mulai Kuis</span>
+                            <i class="fa-solid fa-trophy"></i>
+                        </button>
+                    </div>
+                </section>
+
+                <!-- =========================================================
+                     BAB 5: KUIS INTERAKTIF & PEMBAHASAN OTOMATIS
+                ========================================================== -->
+                <section id="tab-kuis" class="tab-content hidden space-y-6">
+                    <div class="bg-gradient-to-r from-court-900 via-court-800 to-court-700 rounded-3xl p-6 sm:p-8 text-white shadow-md relative overflow-hidden">
+                        <div class="relative z-10 max-w-2xl">
+                            <span class="inline-block bg-shuttle-400 text-court-900 text-xs font-extrabold px-3 py-1 rounded-full uppercase tracking-wide mb-3">Evaluasi Pembelajaran</span>
+                            <h2 class="font-display text-2xl sm:text-3xl font-extrabold mb-2">Kuis Interaktif Bulutangkis</h2>
+                            <p class="text-court-100 text-sm sm:text-base leading-relaxed">
+                                Jawab 10 pertanyaan pilihan ganda berikut untuk mengukur pemahamanmu mengenai materi bulutangkis. Skor dan pembahasan akan muncul secara otomatis!
+                            </p>
+                        </div>
+                        <i class="fa-solid fa-medal text-9xl text-shuttle-400/15 absolute -right-4 -bottom-6"></i>
+                    </div>
+
+                    <!-- Hasil Skor Kuis (Tersembunyi sebelum disubmit) -->
+                    <div id="quiz-result-card" class="hidden bg-white rounded-3xl p-6 sm:p-8 shadow-md border-2 border-court-500 text-center space-y-4">
+                        <div class="w-20 h-20 mx-auto rounded-full bg-shuttle-300/40 text-court-800 flex items-center justify-center text-4xl font-extrabold">
+                            <i class="fa-solid fa-award text-shuttle-500"></i>
+                        </div>
+                        <div>
+                            <p class="text-xs font-bold uppercase tracking-wider text-slate-400">Hasil Evaluasi Kamu</p>
+                            <h3 class="font-display text-3xl sm:text-4xl font-extrabold text-court-800 mt-1">
+                                Skor: <span id="quiz-score-value">0</span> / 100
+                            </h3>
+                            <p id="quiz-feedback-msg" class="text-sm sm:text-base text-slate-600 mt-2 max-w-lg mx-auto"></p>
+                        </div>
+                        <div class="flex flex-wrap justify-center gap-3 pt-2">
+                            <button onclick="resetQuiz()" class="bg-court-700 hover:bg-court-800 text-white font-bold px-6 py-2.5 rounded-xl shadow transition flex items-center gap-2">
+                                <i class="fa-solid fa-rotate-right"></i>
+                                <span>Ulangi Kuis</span>
+                            </button>
+                            <a href="#quiz-questions-list" class="bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold px-6 py-2.5 rounded-xl transition flex items-center gap-2">
+                                <i class="fa-solid fa-magnifying-glass"></i>
+                                <span>Lihat Pembahasan Jawaban</span>
+                            </a>
+                        </div>
+                    </div>
+
+                    <!-- Peringatan Jika Belum Semua Soal Dijawab -->
+                    <div id="quiz-warning" class="hidden bg-amber-50 border border-amber-300 text-amber-800 px-4 py-3 rounded-xl text-sm font-medium flex items-center gap-2">
+                        <i class="fa-solid fa-circle-exclamation text-amber-500"></i>
+                        <span id="quiz-warning-text">Harap jawab semua pertanyaan terlebih dahulu sebelum memeriksa hasil!</span>
+                    </div>
+
+                    <!-- Daftar Soal Kuis (Dirender oleh JS) -->
+                    <div id="quiz-questions-list" class="space-y-5"></div>
+
+                    <!-- Tombol Submit Kuis -->
+                    <div id="quiz-submit-area" class="bg-white rounded-2xl p-5 border border-slate-200 shadow-sm flex flex-col sm:flex-row items-center justify-between gap-4">
+                        <p class="text-sm text-slate-600">
+                            Terjawab: <strong id="answered-count" class="text-court-700">0</strong> dari <strong>10</strong> soal
+                        </p>
+                        <button onclick="submitQuiz()" class="w-full sm:w-auto bg-court-700 hover:bg-court-800 text-white font-bold px-8 py-3.5 rounded-xl shadow-md transition transform active:scale-95 flex items-center justify-center gap-2">
+                            <i class="fa-solid fa-check-double"></i>
+                            <span>Selesai & Lihat Skor</span>
+                        </button>
+                    </div>
+                </section>
+
+            </main>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="bg-white border-t border-slate-200 mt-12 py-6">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-slate-500">
+            <p>© 2026 <strong>BadmintonEdu</strong> — Media Pembelajaran Interaktif Pendidikan Jasmani, Olahraga, dan Kesehatan.</p>
+            <p>Mengacu pada regulasi resmi <em>Badminton World Federation (BWF)</em>.</p>
+        </div>
+    </footer>
+
+    <!-- =========================================================
+         JAVASCRIPT LOGIKA INTERAKTIF
+    ========================================================== -->
+    <script>
+        // --- 1. MANAJEMEN NAVIGASI TAB & PROGRES BELAJAR ---
+        const visitedTabs = new Set(['sejarah']);
+
+        function switchTab(tabId) {
+            // Sembunyikan semua tab konten
+            document.querySelectorAll('.tab-content').forEach(section => {
+                section.classList.add('hidden');
+            });
+
+            // Tampilkan tab yang dipilih
+            const activeSection = document.getElementById('tab-' + tabId);
+            if (activeSection) {
+                activeSection.classList.remove('hidden');
+            }
+
+            // Perbarui gaya tombol navigasi
+            document.querySelectorAll('.nav-btn').forEach(btn => {
+                const isTarget = btn.getAttribute('data-tab') === tabId;
+                const badge = btn.querySelector('span:first-child');
+                if (isTarget) {
+                    btn.classList.remove('text-slate-600', 'hover:bg-court-50', 'hover:text-court-800');
+                    btn.classList.add('bg-court-700', 'text-white', 'shadow-sm');
+                    if (badge && tabId !== 'kuis') {
+                        badge.classList.remove('bg-slate-100', 'text-slate-600');
+                        badge.classList.add('bg-white/20', 'text-white');
+                    }
+                } else {
+                    btn.classList.remove('bg-court-700', 'text-white', 'shadow-sm');
+                    btn.classList.add('text-slate-600', 'hover:bg-court-50', 'hover:text-court-800');
+                    if (badge && btn.getAttribute('data-tab') !== 'kuis') {
+                        badge.classList.remove('bg-white/20', 'text-white');
+                        badge.classList.add('bg-slate-100', 'text-slate-600');
+                    }
+                }
+            });
+
+            // Update progres belajar
+            visitedTabs.add(tabId);
+            const progressPercent = Math.min(100, Math.round((visitedTabs.size / 5) * 100));
+            const progressBar = document.getElementById('progress-bar');
+            if (progressBar) {
+                progressBar.style.width = progressPercent + '%';
+            }
+
+            // Gulir ke atas dengan halus
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        // --- 2. INTERAKTIVITAS DIAGRAM LAPANGAN SVG ---
+        function showCourtInfo(title, description) {
+            const titleEl = document.getElementById('court-zone-title');
+            const descEl = document.getElementById('court-zone-desc');
+            const banner = document.getElementById('court-info-banner');
+
+            titleEl.textContent = title;
+            descEl.textContent = description;
+
+            // Efek kilatan halus pada banner info
+            banner.classList.remove('bg-court-50');
+            banner.classList.add('bg-shuttle-300/30');
+            setTimeout(() => {
+                banner.classList.remove('bg-shuttle-300/30');
+                banner.classList.add('bg-court-50');
+            }, 300);
+        }
+
+        function setCourtMode(mode) {
+            const singlesRect = document.getElementById('highlight-singles');
+            const doublesRect = document.getElementById('highlight-doubles');
+
+            // Reset tombol
+            document.querySelectorAll('.court-mode-btn').forEach(btn => {
+                btn.classList.remove('bg-court-700', 'text-white');
+                btn.classList.add('bg-slate-100', 'text-slate-700');
+            });
+
+            const activeBtn = document.getElementById('btn-court-' + mode);
+            activeBtn.classList.remove('bg-slate-100', 'text-slate-700');
+            activeBtn.classList.add('bg-court-700', 'text-white');
+
+            if (mode === 'singles') {
+                singlesRect.setAttribute('fill-opacity', '0.28');
+                doublesRect.setAttribute('fill-opacity', '0');
+                showCourtInfo(
+                    'Area Permainan Tunggal / Singles (13,40 m × 5,18 m)',
+                    'Permainan tunggal menggunakan garis samping bagian DALAM (lebar 5,18 m) dan garis belakang terluar (panjang 13,40 m) baik saat servis maupun reli.'
+                );
+            } else if (mode === 'doubles') {
+                singlesRect.setAttribute('fill-opacity', '0');
+                doublesRect.setAttribute('fill-opacity', '0.25');
+                showCourtInfo(
+                    'Area Permainan Ganda / Doubles (13,40 m × 6,10 m)',
+                    'Permainan ganda menggunakan garis samping TERLUAR (lebar 6,10 m). Saat servis, batas belakang adalah garis servis belakang ganda (lebih pendek 0,76 m), namun saat reli kembali menggunakan garis terluar.'
+                );
+            } else {
+                singlesRect.setAttribute('fill-opacity', '0');
+                doublesRect.setAttribute('fill-opacity', '0');
+                showCourtInfo(
+                    'Lapangan Standar Internasional BWF (13,40 m × 6,10 m)',
+                    'Silakan klik pada bagian-bagian lapangan di bawah ini (seperti Area Servis, Garis Samping, atau Net) untuk mempelajari fungsinya.'
+                );
+            }
+        }
+
+        // --- 3. FILTER KATEGORI TEKNIK DASAR ---
+        function filterTeknik(category) {
+            document.querySelectorAll('.teknik-filter-btn').forEach(btn => {
+                btn.classList.remove('bg-court-700', 'text-white');
+                btn.classList.add('bg-slate-100', 'text-slate-700');
+            });
+            event.target.classList.remove('bg-slate-100', 'text-slate-700');
+            event.target.classList.add('bg-court-700', 'text-white');
+
+            document.querySelectorAll('.teknik-card').forEach(card => {
+                if (category === 'all' || card.getAttribute('data-cat') === category) {
+                    card.classList.remove('hidden');
+                } else {
+                    card.classList.add('hidden');
+                }
+            });
+        }
+
+        // --- 4. SIMULATOR POSISI SERVIS ---
+        function updateServeSimulator() {
+            const input = document.getElementById('sim-score');
+            const result = document.getElementById('sim-result');
+            let score = parseInt(input.value, 10);
+
+            if (isNaN(score) || score < 0) score = 0;
+            if (score > 29) score = 29;
+            input.value = score;
+
+            const isEven = score % 2 === 0;
+            if (isEven) {
+                result.innerHTML = `Skor <strong>${score} (GENAP)</strong> → Server berdiri di <strong>Kotak Servis KANAN</strong> dan mengarahkan kok menyilang ke kotak servis kanan lawan.`;
+            } else {
+                result.innerHTML = `Skor <strong>${score} (GANJIL)</strong> → Server berdiri di <strong>Kotak Servis KIRI</strong> dan mengarahkan kok menyilang ke kotak servis kiri lawan.`;
+            }
+        }
+
+        // --- 5. DATA & LOGIKA KUIS INTERAKTIF ---
+        const quizData = [
+            {
+                q: "Organisasi induk olahraga bulutangkis tingkat dunia saat ini adalah...",
+                options: ["FIFA", "BWF (Badminton World Federation)", "FIBA", "PBSI"],
+                answer: 1,
+                explanation: "BWF (Badminton World Federation) adalah induk organisasi bulutangkis dunia (sebelumnya bernama IBF), sedangkan PBSI adalah induk di Indonesia."
+            },
+            {
+                q: "Berapakah ukuran panjang dan lebar lapangan bulutangkis standar internasional untuk nomor ganda?",
+                options: ["13,40 m × 5,18 m", "13,40 m × 6,10 m", "18,00 m × 9,00 m", "12,50 m × 6,00 m"],
+                answer: 1,
+                explanation: "Panjang lapangan bulutangkis adalah 13,40 meter dengan lebar 6,10 meter (untuk ganda) dan 5,18 meter (untuk tunggal)."
+            },
+            {
+                q: "Tinggi net pada bagian tengah lapangan bulutangkis sesuai standar BWF adalah...",
+                options: ["1,55 meter", "1,524 meter", "1,60 meter", "1,45 meter"],
+                answer: 1,
+                explanation: "Tinggi tiang net adalah 1,55 meter, namun pada bagian tengah net sedikit melengkung dengan ketinggian 1,524 meter."
+            },
+            {
+                q: "Cara memegang raket bulutangkis seperti sedang berjabat tangan dan ibu jari serta telunjuk membentuk huruf 'V' disebut...",
+                options: ["Backhand Grip", "American Grip", "Forehand Grip", "Panhandle Grip"],
+                answer: 2,
+                explanation: "Forehand grip (shakehand grip) dilakukan dengan menggenggam tangkai raket seperti berjabat tangan sehingga ibu jari dan telunjuk membentuk huruf 'V'."
+            },
+            {
+                q: "Pukulan menyerang yang dilakukan dari atas kepala dengan tenaga penuh sehingga kok meluncur tajam dan menukik cepat ke area lawan disebut...",
+                options: ["Pukulan Lob", "Pukulan Dropshot", "Pukulan Netting", "Pukulan Smash"],
+                answer: 3,
+                explanation: "Smash adalah pukulan serangan utama dengan kecepatan tinggi dan arah kok menukik tajam ke bawah."
+            },
+            {
+                q: "Apabila pelaku servis memiliki skor 7 (ganjil), maka ia harus melakukan servis dari...",
+                options: ["Kotak servis sebelah kanan", "Kotak servis sebelah kiri", "Tengah garis belakang", "Bebas memilih kotak"],
+                answer: 1,
+                explanation: "Dalam bulutangkis, skor GENAP (0, 2, 4...) melakukan servis dari kotak KANAN, sedangkan skor GANJIL (1, 3, 5...) dari kotak KIRI."
+            },
+            {
+                q: "Dalam sistem perhitungan skor Rally Point 21, apa yang terjadi jika kedua pemain mencapai skor imbang 20 – 20?",
+                options: ["Pertandingan langsung berakhir seri", "Dilakukan adu penalti servis", "Dilanjutkan hingga selisih 2 poin (maksimal poin 30)", "Diulang dari skor 0 – 0"],
+                answer: 2,
+                explanation: "Saat skor 20-20 (deuce/setting), pemain harus unggul selisih 2 poin untuk menang, dengan batas maksimal poin ke-30 jika skor mencapai 29-29."
+            },
+            {
+                q: "Pada permainan GANDA, saat melakukan servis kok jatuh di lorong belakang (0,76 m sebelum garis paling belakang). Keputusan wasit adalah...",
+                options: ["Sah (In) dan reli berlanjut", "Keluar (Out / Fault)", "Servis diulang (Let)", "Poin dibagi dua"],
+                answer: 1,
+                explanation: "Saat servis ganda, batas belakang lapangan adalah garis servis belakang ganda (0,76 m dari garis terluar). Jika melewati garis tersebut saat servis, dinyatakan Out/Fault."
+            },
+            {
+                q: "Pukulan yang gerakannya menyerupai smash, tetapi kok dipukul pelan sehingga jatuh tipis di dekat net lawan disebut...",
+                options: ["Dropshot", "Drive", "Clear / Lob", "Service"],
+                answer: 0,
+                explanation: "Dropshot bertujuan mengecoh lawan dengan gerakan awal mirip smash namun laju kok pelan dan jatuh sedekat mungkin dengan net."
+            },
+            {
+                q: "Siapakah pasangan peraih medali emas Olimpiade pertama bagi Indonesia pada cabang olahraga bulutangkis di Olimpiade Barcelona 1992?",
+                options: ["Taufik Hidayat & Liliyana Natsir", "Susi Susanti & Alan Budikusuma", "Rudy Hartono & Liem Swie King", "Kevin Sanjaya & Marcus Gideon"],
+                answer: 1,
+                explanation: "Susi Susanti (tunggal putri) dan Alan Budikusuma (tunggal putra) mempersembahkan medali emas Olimpiade pertama sepanjang sejarah Indonesia di Barcelona 1992."
+            }
+        ];
+
+        let userAnswers = new Array(quizData.length).fill(null);
+        let quizSubmitted = false;
+
+        function renderQuiz() {
+            const container = document.getElementById('quiz-questions-list');
+            container.innerHTML = '';
+
+            quizData.forEach((item, index) => {
+                const card = document.createElement('div');
+                card.id = `q-card-${index}`;
+                card.className = 'bg-white rounded-2xl p-5 sm:p-6 shadow-sm border border-slate-200 transition';
+
+                let optionsHtml = '';
+                item.options.forEach((opt, optIdx) => {
+                    const isSelected = userAnswers[index] === optIdx;
+                    let btnStyle = 'border-slate-200 hover:border-court-500 hover:bg-court-50/50 text-slate-700';
+                    let badgeStyle = 'bg-slate-100 text-slate-600';
+                    let statusIcon = '';
+
+                    if (quizSubmitted) {
+                        if (optIdx === item.answer) {
+                            btnStyle = 'border-court-600 bg-court-50 text-court-900 font-semibold';
+                            badgeStyle = 'bg-court-600 text-white';
+                            statusIcon = '<i class="fa-solid fa-circle-check text-court-600 ml-auto text-lg"></i>';
+                        } else if (isSelected && optIdx !== item.answer) {
+                            btnStyle = 'border-red-500 bg-red-50 text-red-900';
+                            badgeStyle = 'bg-red-500 text-white';
+                            statusIcon = '<i class="fa-solid fa-circle-xmark text-red-500 ml-auto text-lg"></i>';
+                        } else {
+                            btnStyle = 'border-slate-100 text-slate-400 opacity-75';
+                        }
+                    } else if (isSelected) {
+                        btnStyle = 'border-court-600 bg-court-50 text-court-900 font-semibold ring-2 ring-court-500/30';
+                        badgeStyle = 'bg-court-700 text-white';
+                    }
+
+                    const letters = ['A', 'B', 'C', 'D'];
+                    optionsHtml += `
+                        <button type="button" onclick="selectOption(${index}, ${optIdx})" ${quizSubmitted ? 'disabled' : ''}
+                            class="w-full text-left p-3.5 rounded-xl border-2 transition flex items-center gap-3 ${btnStyle}">
+                            <span class="w-7 h-7 rounded-lg flex-shrink-0 flex items-center justify-center text-xs font-bold ${badgeStyle}">
+                                ${letters[optIdx]}
+                            </span>
+                            <span class="text-sm">${opt}</span>
+                            ${statusIcon}
+                        </button>
+                    `;
+                });
+
+                let explanationHtml = '';
+                if (quizSubmitted) {
+                    const isCorrect = userAnswers[index] === item.answer;
+                    explanationHtml = `
+                        <div class="mt-4 p-4 rounded-xl text-xs sm:text-sm ${isCorrect ? 'bg-court-50 border border-court-200 text-court-900' : 'bg-amber-50 border border-amber-200 text-amber-900'}">
+                            <p class="font-bold mb-1">
+                                ${isCorrect ? '<i class="fa-solid fa-check text-court-600 mr-1"></i> Jawaban Benar!' : '<i class="fa-solid fa-lightbulb text-amber-600 mr-1"></i> Pembahasan:'}
+                            </p>
+                            <p class="leading-relaxed">${item.explanation}</p>
+                        </div>
+                    `;
+                }
+
+                card.innerHTML = `
+                    <div class="flex items-start gap-3 mb-4">
+                        <span class="bg-court-800 text-white text-xs font-bold px-2.5 py-1 rounded-lg mt-0.5">Soal ${index + 1}</span>
+                        <h4 class="font-bold text-slate-800 text-sm sm:text-base leading-snug">${item.q}</h4>
+                    </div>
+                    <div class="space-y-2.5">
+                        ${optionsHtml}
+                    </div>
+                    ${explanationHtml}
+                `;
+                container.appendChild(card);
+            });
+
+            // Update counter terjawab
+            const answered = userAnswers.filter(val => val !== null).length;
+            document.getElementById('answered-count').textContent = answered;
+        }
+
+        function selectOption(qIndex, optIndex) {
+            if (quizSubmitted) return;
+            userAnswers[qIndex] = optIndex;
+            document.getElementById('quiz-warning').classList.add('hidden');
+            renderQuiz();
+        }
+
+        function submitQuiz() {
+            const unansweredCount = userAnswers.filter(val => val === null).length;
+            if (unansweredCount > 0) {
+                const warning = document.getElementById('quiz-warning');
+                document.getElementById('quiz-warning-text').textContent = `Masih ada ${unansweredCount} soal yang belum kamu jawab. Silakan lengkapi semua jawaban terlebih dahulu!`;
+                warning.classList.remove('hidden');
+                warning.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                return;
+            }
+
+            quizSubmitted = true;
+            let correctCount = 0;
+            quizData.forEach((item, idx) => {
+                if (userAnswers[idx] === item.answer) correctCount++;
+            });
+
+            const finalScore = correctCount * 10;
+            document.getElementById('quiz-score-value').textContent = finalScore;
+
+            let feedback = '';
+            if (finalScore >= 90) {
+                feedback = `Luar biasa! Kamu menjawab ${correctCount} dari 10 soal dengan benar. Pemahamanmu tentang olahraga bulutangkis sangat matang!`;
+            } else if (finalScore >= 70) {
+                feedback = `Bagus sekali! Kamu menjawab ${correctCount} dari 10 soal dengan benar. Pelajari kembali pembahasan di bawah untuk menyempurnakan pemahamanmu.`;
+            } else {
+                feedback = `Kamu menjawab ${correctCount} dari 10 soal dengan benar. Jangan menyerah! Baca kembali Bab 1–4 dan coba ulangi kuis ini.`;
+            }
+            document.getElementById('quiz-feedback-msg').textContent = feedback;
+
+            document.getElementById('quiz-result-card').classList.remove('hidden');
+            document.getElementById('quiz-submit-area').classList.add('hidden');
+            renderQuiz();
+
+            document.getElementById('quiz-result-card').scrollIntoView({ behavior: 'smooth', block: 'center' });
+        }
+
+        function resetQuiz() {
+            userAnswers = new Array(quizData.length).fill(null);
+            quizSubmitted = false;
+            document.getElementById('quiz-result-card').classList.add('hidden');
+            document.getElementById('quiz-submit-area').classList.remove('hidden');
+            document.getElementById('quiz-warning').classList.add('hidden');
+            renderQuiz();
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        // Inisialisasi saat halaman dimuat
+        window.addEventListener('DOMContentLoaded', () => {
+            renderQuiz();
+        });
+    </script>
+</body>
+</html>
